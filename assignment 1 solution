@@ -1,0 +1,81 @@
+
+library(rvest)
+#Question a
+url <- "https://www.moneyworks4me.com/best-index/nse-stocks/top-nifty50-companies-list/"
+html <- read_html(url)
+table <- html %>%
+  html_table() %>%
+  .[[1]]
+view(table)
+#Question c
+tennis <- function(p)
+{
+  
+  A <- 0
+  B <- 0
+  for(k in 1:5)
+  {
+    next_game <- sample(0:1, size = 1, prob = c(p, 1-p))
+    if(next_game == 0) B <- B+1
+    if(next_game == 1) A <- A+1
+    
+    
+    if(A == 3 || B == 3)
+    {
+      x <- k 
+      break
+    }
+  }  
+  return(x)
+}
+
+
+my_matches <- numeric(length = 1000)
+for(i in 1:1000)
+{
+  my_matches[i] <- tennis(.7)
+}
+
+ans <- mean(my_matches)
+ans
+
+
+#Question d
+#1
+MontyHall <- function() {
+  doors <- c("car", "goat", "goat") 
+  choice <- sample(1:3, 1) 
+  
+  
+  monty_open <- setdiff(1:3, choice)[doors[-choice] == "goat"]
+  
+  
+  choice <- setdiff(1:3, c(choice, monty_open))
+  
+ 
+  if (doors[choice] == "car") {
+    return(1)  
+  } else {
+    return(0)  
+  }
+}
+
+num_simulations <- 1000  
+wins <- replicate(num_simulations, MontyHall()) 
+probability_winning <- sum(wins) / num_simulations  
+
+print(probability_winning)
+
+
+
+
+#Question e
+html2 <- read_html("https://editorial.rottentomatoes.com/guide/best-netflix-movies-to-watch-right-now/")
+movie_names <- html2 %>% html_elements(".article_movie_title a") %>% html_text()
+year<-html2 %>% html_elements(".subtle.start-year") %>% html_text() %>% substr(2,5) %>% as.numeric()
+tomato <-html2 %>% html_elements(".tMeterScore") %>% html_text() %>% substr(1,4)
+rank<- html2 %>% html_elements(".countdown-index-resposive") %>% html_text() %>% substr(2,6) %>% as.numeric()
+movie_names
+tomato
+year
+rank
